@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kotorody | Portfolio</title>
+  <meta name="description" content="kotorody — Aid-On フロントエンドエンジニアのポートフォリオ" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+          },
+          colors: {
+            surface: {
+              50: '#f8f9fc',
+              100: '#eef0f6',
+              200: '#d5d9e6',
+              800: '#1a1c25',
+              900: '#0f1117',
+              950: '#08090d',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent;
+    }
+
+    body {
+      background: #08090d;
+      color: #eef0f6;
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: rgba(255, 81, 102, 0.3);
+      color: #fff;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+    }
+
+    /* ── Ambient glow ── */
+    .ambient-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(180px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .glow-1 { background: #7c3aed; top: -200px; left: -100px; }
+    .glow-2 { background: #ff5166; bottom: -200px; right: -100px; }
+
+    /* ── Hero ── */
+    .hero-title {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 0%, #a0a0b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: #6b7094;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, #ff5166, #7c3aed);
+      border-radius: 1px;
+    }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── Project card ── */
+    .project-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 2.5rem;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.5s ease,
+                  box-shadow 0.5s ease;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: radial-gradient(
+        800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.03),
+        transparent 40%
+      );
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 80px -16px rgba(0, 0, 0, 0.5);
+    }
+
+    .project-card .logo-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-card .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .project-card .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .project-card .card-desc {
+      color: #8b8fad;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .project-card .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #6b7094;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .project-card .card-link:hover {
+      color: #fff;
+    }
+
+    .card-link .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover .card-link .arrow {
+      transform: translateX(4px);
+    }
+
+    /* ── Accent colors per card ── */
+    .project-card[data-accent="purple"]:hover {
+      border-color: rgba(124, 58, 237, 0.25);
+      box-shadow: 0 24px 80px -16px rgba(124, 58, 237, 0.15);
+    }
+    .project-card[data-accent="blue"]:hover {
+      border-color: rgba(59, 130, 246, 0.25);
+      box-shadow: 0 24px 80px -16px rgba(59, 130, 246, 0.15);
+    }
+    .project-card[data-accent="cyan"]:hover {
+      border-color: rgba(0, 255, 220, 0.2);
+      box-shadow: 0 24px 80px -16px rgba(0, 255, 220, 0.1);
+    }
+    .project-card[data-accent="red"]:hover {
+      border-color: rgba(255, 81, 102, 0.25);
+      box-shadow: 0 24px 80px -16px rgba(255, 81, 102, 0.15);
+    }
+
+    /* ── Tag pill ── */
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.05);
+      color: #6b7094;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Footer ── */
+    .footer-line {
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.08) 50%,
+        transparent
+      );
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .project-card {
+        padding: 1.75rem;
+      }
+      .project-card .logo-wrap {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+      }
+    }
+
+    /* ── Subtle float animation for hero ── */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .float-anim {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #4a4e6a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- ────────── Hero ────────── -->
+  <header class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 text-center">
+    <div class="reveal">
+      <p class="hero-sub mb-6">Aid-On / Frontend Engineer</p>
+      <h1 class="hero-title mb-8">kotorody</h1>
+      <div class="divider mx-auto mb-8"></div>
+      <p class="text-[#6b7094] max-w-md mx-auto leading-relaxed text-sm">
+        Webアプリケーションの設計・開発を担当。<br />
+        ユーザー体験とビジュアルデザインの両立を追求しています。
+      </p>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal reveal-delay-2">
+      <span class="text-[10px] font-medium tracking-[0.2em] uppercase text-[#4a4e6a]">Scroll</span>
+      <div class="w-px h-8 bg-gradient-to-b from-[#4a4e6a] to-transparent"></div>
+    </div>
+  </header>
+
+  <!-- ────────── Projects ────────── -->
+  <main class="relative z-10 max-w-5xl mx-auto px-6 pb-32">
+
+    <div class="mb-16 reveal">
+      <p class="section-heading">Works</p>
+    </div>
+
+    <div class="grid gap-6">
+
+      <!-- Text Smash -->
+      <article class="project-card reveal reveal-delay-1" data-accent="purple">
+        <div class="flex flex-col sm:flex-row gap-6">
+          <div class="logo-wrap">
+            <img src="assets/logos/textsmash.png" alt="Text Smash" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <h2 class="card-title">Text Smash</h2>
+              <span class="tag">Web App</span>
+            </div>
+            <p class="card-desc mb-4">
+              テキストを分解し、本質を可視化するツール。入力されたテキストの構造と意味を解析し、
+              核となる要素をビジュアルとして再構成します。
+            </p>
+            <a href="https://textsmash.aid-on.org" target="_blank" rel="noopener" class="card-link">
+              textsmash.aid-on.org
+              <span class="arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Fact Judge -->
+      <article class="project-card reveal reveal-delay-2" data-accent="blue">
+        <div class="flex flex-col sm:flex-row gap-6">
+          <div class="logo-wrap" style="background: rgba(255,255,255,0.9);">
+            <img src="assets/logos/factjudge.png" alt="Fact Judge" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <h2 class="card-title">Fact Judge</h2>
+              <span class="tag">AI Tool</span>
+            </div>
+            <p class="card-desc mb-4">
+              AIファクトチェックアシスタント。入力された情報の正確性をAIが検証し、
+              信頼性の判定と根拠の提示を行います。
+            </p>
+            <a href="https://factjudge.aid-on.org" target="_blank" rel="noopener" class="card-link">
+              factjudge.aid-on.org
+              <span class="arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spider 5000 -->
+      <article class="project-card reveal reveal-delay-3" data-accent="cyan">
+        <div class="flex flex-col sm:flex-row gap-6">
+          <div class="logo-wrap">
+            <img src="assets/logos/spider5000.png" alt="Spider 5000" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <h2 class="card-title">Spider 5000</h2>
+              <span class="tag">PWA</span>
+            </div>
+            <p class="card-desc mb-4">
+              思考地図ツール。アイデアや情報をスパイダーマップとして展開し、
+              思考の構造化と整理を支援するプログレッシブWebアプリ。
+            </p>
+            <a href="https://spider5000.aid-on.org" target="_blank" rel="noopener" class="card-link">
+              spider5000.aid-on.org
+              <span class="arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Aid-On HP -->
+      <article class="project-card reveal reveal-delay-4" data-accent="red">
+        <div class="flex flex-col sm:flex-row gap-6">
+          <div class="logo-wrap" style="background: rgba(255,255,255,0.95); padding: 12px;">
+            <img src="assets/logos/aidon.svg" alt="Aid-On" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <h2 class="card-title">Aid-On HP</h2>
+              <span class="tag">Corporate</span>
+            </div>
+            <p class="card-desc mb-4">
+              Aid-Onコーポレートサイト。「AIを作らず、相棒をつくろう」をコンセプトに、
+              企業理念・サービス・技術スタックを紹介するブランドサイト。
+            </p>
+            <a href="https://aid-on.org" target="_blank" rel="noopener" class="card-link">
+              aid-on.org
+              <span class="arrow">&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- ────────── Footer ────────── -->
+  <footer class="relative z-10 pb-12 px-6">
+    <div class="footer-line max-w-5xl mx-auto mb-8"></div>
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-[#4a4e6a] text-xs tracking-wider">&copy; 2026 kotorody / Aid-On</p>
+      <a href="https://aid-on.org" target="_blank" rel="noopener"
+         class="text-[#4a4e6a] text-xs tracking-wider hover:text-[#6b7094] transition-colors">
+        aid-on.org
+      </a>
+    </div>
+  </footer>
+
+  <!-- ────────── Scripts ────────── -->
+  <script>
+    // Scroll reveal via Intersection Observer
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    // Card mouse tracking for radial glow
+    document.querySelectorAll('.project-card').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
+  </script>
+
+</body>
+</html>
