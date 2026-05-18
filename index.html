@@ -100,6 +100,13 @@
       letter-spacing: 0.08em;
     }
 
+    .real-name {
+      font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: #4a4e6a;
+    }
+
     .divider {
       width: 48px;
       height: 2px;
@@ -127,11 +134,13 @@
 
     /* ── Project card ── */
     .project-card {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
       position: relative;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 20px;
-      padding: 2.5rem;
       transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
                   border-color 0.5s ease,
                   box-shadow 0.5s ease;
@@ -164,9 +173,6 @@
     }
 
     .project-card .logo-wrap {
-      width: 72px;
-      height: 72px;
-      border-radius: 16px;
       overflow: hidden;
       flex-shrink: 0;
       background: rgba(255, 255, 255, 0.05);
@@ -182,7 +188,7 @@
     }
 
     .project-card .card-title {
-      font-size: 1.5rem;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
       font-weight: 700;
       letter-spacing: -0.02em;
       color: #fff;
@@ -190,7 +196,7 @@
 
     .project-card .card-desc {
       color: #8b8fad;
-      font-size: 0.95rem;
+      font-size: clamp(0.75rem, 1.5vw, 0.95rem);
       line-height: 1.7;
     }
 
@@ -250,15 +256,22 @@
     }
 
     /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .project-card {
-        padding: 1.75rem;
-      }
-      .project-card .logo-wrap {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
-      }
+    .project-card {
+      padding: clamp(1.25rem, 3vw, 2.5rem);
+    }
+
+    .project-card .logo-wrap {
+      width: clamp(48px, 10vw, 72px);
+      height: clamp(48px, 10vw, 72px);
+      border-radius: clamp(10px, 2vw, 16px);
+    }
+
+    .project-card .card-link {
+      font-size: clamp(0.7rem, 1.3vw, 0.85rem);
+    }
+
+    .tag {
+      font-size: clamp(0.55rem, 1vw, 0.7rem);
     }
 
     /* ── Subtle float animation for hero ── */
@@ -291,7 +304,8 @@
   <header class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 text-center">
     <div class="reveal">
       <p class="hero-sub mb-6">Aid-On / HTML Coder</p>
-      <h1 class="hero-title mb-8">kotorody</h1>
+      <h1 class="hero-title mb-3">Kotone Oyama</h1>
+      <p class="real-name mb-8">kotorody</p>
       <div class="divider mx-auto mb-8"></div>
       <p class="text-[#6b7094] max-w-lg mx-auto leading-relaxed text-sm">
         FigmaのデザインカンプからHTML/CSSを駆使し、<br />
@@ -313,99 +327,79 @@
       <p class="section-heading">Works</p>
     </div>
 
-    <div class="grid gap-6">
+    <div class="grid grid-cols-2 gap-4 sm:gap-6">
 
       <!-- Text Smash -->
-      <article class="project-card reveal reveal-delay-1" data-accent="purple">
-        <div class="flex flex-col sm:flex-row gap-6">
-          <div class="logo-wrap">
-            <img src="assets/logos/textsmash.png" alt="Text Smash" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex flex-wrap items-center gap-3 mb-3">
-              <h2 class="card-title">Text Smash</h2>
-              <span class="tag">Web App</span>
-            </div>
-            <p class="card-desc mb-4">
-              テキストを分解し、本質を可視化するツール。入力されたテキストの構造と意味を解析し、
-              核となる要素をビジュアルとして再構成します。
-            </p>
-            <a href="https://textsmash.aid-on.org" target="_blank" rel="noopener" class="card-link">
-              textsmash.aid-on.org
-              <span class="arrow">&rarr;</span>
-            </a>
-          </div>
+      <a href="https://textsmash.aid-on.org/login" target="_blank" rel="noopener" class="project-card reveal reveal-delay-1" data-accent="purple">
+        <div class="logo-wrap mb-4">
+          <img src="assets/logos/textsmash.png?v=2" alt="Text Smash" />
         </div>
-      </article>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <h2 class="card-title">Text Smash</h2>
+          <span class="tag">Web App</span>
+        </div>
+        <p class="card-desc mb-3">
+          テキストを分解し、本質を可視化するツール。構造と意味を解析し、核となる要素をビジュアルとして再構成します。
+        </p>
+        <span class="card-link">
+          textsmash.aid-on.org
+          <span class="arrow">&rarr;</span>
+        </span>
+      </a>
 
       <!-- Fact Judge -->
-      <article class="project-card reveal reveal-delay-2" data-accent="blue">
-        <div class="flex flex-col sm:flex-row gap-6">
-          <div class="logo-wrap" style="background: rgba(255,255,255,0.9);">
-            <img src="assets/logos/factjudge.png" alt="Fact Judge" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex flex-wrap items-center gap-3 mb-3">
-              <h2 class="card-title">Fact Judge</h2>
-              <span class="tag">AI Tool</span>
-            </div>
-            <p class="card-desc mb-4">
-              AIファクトチェックアシスタント。入力された情報の正確性をAIが検証し、
-              信頼性の判定と根拠の提示を行います。
-            </p>
-            <a href="https://factjudge.aid-on.org" target="_blank" rel="noopener" class="card-link">
-              factjudge.aid-on.org
-              <span class="arrow">&rarr;</span>
-            </a>
-          </div>
+      <a href="https://factjudge.aid-on.org/login" target="_blank" rel="noopener" class="project-card reveal reveal-delay-2" data-accent="blue">
+        <div class="logo-wrap mb-4" style="background: rgba(255,255,255,0.9);">
+          <img src="assets/logos/factjudge.png?v=2" alt="Fact Judge" />
         </div>
-      </article>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <h2 class="card-title">Fact Judge</h2>
+          <span class="tag">AI Tool</span>
+        </div>
+        <p class="card-desc mb-3">
+          AIファクトチェックアシスタント。入力された情報の正確性をAIが検証し、信頼性の判定と根拠を提示します。
+        </p>
+        <span class="card-link">
+          factjudge.aid-on.org
+          <span class="arrow">&rarr;</span>
+        </span>
+      </a>
 
       <!-- Spider 5000 -->
-      <article class="project-card reveal reveal-delay-3" data-accent="cyan">
-        <div class="flex flex-col sm:flex-row gap-6">
-          <div class="logo-wrap">
-            <img src="assets/logos/spider5000.png" alt="Spider 5000" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex flex-wrap items-center gap-3 mb-3">
-              <h2 class="card-title">Spider 5000</h2>
-              <span class="tag">PWA</span>
-            </div>
-            <p class="card-desc mb-4">
-              思考地図ツール。アイデアや情報をスパイダーマップとして展開し、
-              思考の構造化と整理を支援するプログレッシブWebアプリ。
-            </p>
-            <a href="https://spider5000.aid-on.org" target="_blank" rel="noopener" class="card-link">
-              spider5000.aid-on.org
-              <span class="arrow">&rarr;</span>
-            </a>
-          </div>
+      <a href="https://spider5000.aid-on.org/login" target="_blank" rel="noopener" class="project-card reveal reveal-delay-3" data-accent="cyan">
+        <div class="logo-wrap mb-4">
+          <img src="assets/logos/spider5000.png?v=2" alt="Spider 5000" />
         </div>
-      </article>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <h2 class="card-title">Spider 5000</h2>
+          <span class="tag">PWA</span>
+        </div>
+        <p class="card-desc mb-3">
+          思考地図ツール。アイデアや情報をスパイダーマップとして展開し、思考の構造化と整理を支援するPWA。
+        </p>
+        <span class="card-link">
+          spider5000.aid-on.org
+          <span class="arrow">&rarr;</span>
+        </span>
+      </a>
 
       <!-- Aid-On HP -->
-      <article class="project-card reveal reveal-delay-4" data-accent="red">
-        <div class="flex flex-col sm:flex-row gap-6">
-          <div class="logo-wrap" style="background: rgba(255,255,255,0.95); padding: 12px;">
-            <img src="assets/logos/aidon.svg" alt="Aid-On" />
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex flex-wrap items-center gap-3 mb-3">
-              <h2 class="card-title">Aid-On HP</h2>
-              <span class="tag">Corporate</span>
-            </div>
-            <p class="card-desc mb-4">
-              Aid-Onコーポレートサイト。「AIを作らず、相棒をつくろう」をコンセプトに、
-              企業理念・サービス・技術スタックを紹介するブランドサイト。
-            </p>
-            <a href="https://aid-on.org" target="_blank" rel="noopener" class="card-link">
-              aid-on.org
-              <span class="arrow">&rarr;</span>
-            </a>
-          </div>
+      <a href="https://aid-on.org" target="_blank" rel="noopener" class="project-card reveal reveal-delay-4" data-accent="red">
+        <div class="logo-wrap mb-4" style="background: rgba(255,255,255,0.95); padding: 12px;">
+          <img src="assets/logos/aidon.svg?v=2" alt="Aid-On" />
         </div>
-      </article>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <h2 class="card-title">Aid-On HP</h2>
+          <span class="tag">Corporate</span>
+        </div>
+        <p class="card-desc mb-3">
+          Aid-Onコーポレートサイト。「AIを作らず、相棒をつくろう」をコンセプトに、企業理念とサービスを紹介。
+        </p>
+        <span class="card-link">
+          aid-on.org
+          <span class="arrow">&rarr;</span>
+        </span>
+      </a>
 
     </div>
   </main>
